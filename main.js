@@ -1,6 +1,4 @@
 
-console.log("Hello World")
-
 const express = require("express");
 
 const app = express();
@@ -13,6 +11,7 @@ app.listen(8080, function() {
     console.log("Server is running on localhost8080");
 }); 
 
+var http = require('http');
 
 /** var http = require('http');
 
