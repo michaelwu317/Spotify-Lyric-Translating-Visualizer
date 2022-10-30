@@ -1,11 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 <title>Spotify Visualizer</title>
 
-<!-- CSS styles link -->
-<link rel="stylesheet" type="text/css" href="styles/site.css"/>
+<style>
+    body {
+        font-family: Verdana, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .play-button {
+        text-align: center;
+    }
+
+    #togglePlay {
+        margin-bottom: 2em;
+    }
+
+    .song-name-lyrics {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        border: double 6px;
+        border-radius: 25px;
+        width: 40%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
 </head>
 
 <body>
@@ -14,6 +42,15 @@
     <div class="play-button">
         <p>Press 'Play' to listen!</p> 
         <button id="togglePlay">Play</button>
+    </div>
+
+    <div class="song-name-lyrics">
+        <article>
+            <p>name</p>
+        </article>
+        <article>
+            <p>lyrics</p>
+        </article>
     </div>
 
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
