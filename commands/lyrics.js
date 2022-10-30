@@ -1,6 +1,6 @@
 const oauth = 'Bearer BQD2mIFVyjJynsJybi26Zzt4pAIkx7CgBIJSAg6OChosDkIbA_okDEeREtr7LV_oRrepMtCyYGlpiJFkBG8BGFB5iCkEZ5DaV-WURESp-eRC0px9t4xPe16Fh_TUckA3Mqqc5_VyM0S0V6XL46CDs-wbGTuTe_yJdLg92qbF8J0qEfxfFAF73930DmrYVBJdkKBAIXOsn0An4ANqf2ck5tE';
-import { getLyrics, getSong } from 'genius-lyrics-api';
- 
+const { getLyrics, getSong } = require("genius-lyrics-api");
+
 async function getCurrentTrack() {
     await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
     headers: {
@@ -23,7 +23,7 @@ function getTrackCharacteristics(trackID) {
     .then((data) => console.log(data));
 }
 
-function Lyrics(song, artist){
+async function Lyrics(song, artist){
     var options = {
         apiKey: 'YHUqc2XDBg0S5eD9csE8gIVANK0z-Pc4tzG5PlUcUL6DOnEIf6Z6DLxbjxJPZewT',
         title: song,
@@ -31,7 +31,8 @@ function Lyrics(song, artist){
         optimizeQuery: true
     };
 
-    getLyrics(options).then((lyrics) => console.log(lyrics));
+   lyrics = await getLyrics(options);
+   return lyrics;
 
     // getSong(options).then((song) =>
 	// console.log(`
@@ -112,12 +113,11 @@ const lang = {
     
     console.log(await res.json());
     }
-
-Lyrics("Blinding Lights", "The Weeknd");
-
+    // Lyrics("Blinding Lights", "The Weeknd");
 //Lyrics("Mr. Brightside", "The Killers");
 
 //translate("Hi")
 // translateLyrics(Lyrics("Blinding Lights", "The Weeknd"), "es"); 
 
 // console.log(getCurrentTrack());
+module.exports = { Lyrics }

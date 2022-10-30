@@ -15,7 +15,7 @@
         text-align: center;
     }
     #togglePlay {
-        margin-bottom: 1.5em;
+        margin-bottom: 1em;
     }
     .song-name-lyrics {
         display: flex;
@@ -27,14 +27,27 @@
         margin-left: auto;
         margin-right: auto;
         overflow: auto;
+        max-height: 400px;
     }
     .song-name-lyrics p {
-        margin-top: 1em;
-        margin-bottom: 1em;
+        padding: 0.75em;
     }
     form {
-        margin-top: 1em;
-        margin-bottom: 1em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+    #name {
+        font-size: 20px;
+        margin-bottom: 0em;
+        padding-bottom: 0em;
+    }
+    #artists {
+        font-size: 20px;
+        margin-top: 0em;
+        padding-top: 0em;
+    }
+    #lyrics {
+        margin-top: 0em;
     }
     @keyframes move_wave {
         0% {
@@ -133,17 +146,35 @@
     <div class="song-name-lyrics">
         <article>
             <p id="name"></p>
+            <p id="artists"></p>
             <script src="tracks.js"></script>
             <script>
+                async function fetchCurrentSong(){
                     body = fetch('https://api.spotify.com/v1/me/player/currently-playing', {
                     headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer BQDLB27f4cAiUGEYkKhs1n3d39v_CodCanNa8XfCc06UoT5XbgS3fAJTzgS0PoQXz3SLUdobCo5_erX3VxvXqF4bb4DLOssHOPUnhF0YmQpfRSESduBjflGAhsRlw5st9nPY6bHpMw_ocT1JYCy_GUBelWlTzskx-vAQiuxavNp5cB4hhZCX_V61uNSwv-tmju6FH3Ut'
+                    'Authorization': 'Bearer BQBSFTUCsWrKmIzOu8I2NS1uSsp_cIfsACixGXJ8dlFBbumj_wnmORLTPE-bnJe_EE2sSpp-KcTkSs3JZHQ8guIIxIFHdIYLCCBdEGHql7ga2Yp-vkKkz92vsk6b7wn1cSexE6Neh4UWoVsnNsNGjlZniMJ8y4QQHAl6W0kSsqkVHAf91OMF7dwOOXKzNpsIGiKZuPlt'
+                }}).then((response) => handleResponse(response))
+                }  
+                
+                async function handleResponse(resp) {
+                    if(resp.status == 401) {
+                        document.getElementById("name").innerHTML = "Unauthorized, provide a valid token.";
+                    } else if (resp.status == 204) {
+                        document.getElementById("name").innerHTML = "No song playing.";
+                    } else if (resp.status == 200){
+                        resp_json = await resp.json()
+                        song_name = resp_json.item.name
+                        artist = resp_json.item.artists[0].name
+                        document.getElementById("name").innerHTML = song_name;
+                        document.getElementById("artists").innerHTML = artist;
+                    } else {
+                        document.getElementById("name").innerHTML = "Unknown error encountered: " + resp.status;
+                    }
                 }
-                }).then((response) => response.json())
-                .then((data) => document.getElementById("name").innerHTML = data.item.name);
-            </script>
+                fetchCurrentSong();
+                </script>
         </article>
 
         <script>
@@ -190,15 +221,46 @@
 
         <article>
             <p id="lyrics"></p>
-            <script src="commands/lyrics.js"></script>
+            <script src="../commands/lyrics.js"></script>
             <script>
-                var options = {
-                    apiKey: 'YHUqc2XDBg0S5eD9csE8gIVANK0z-Pc4tzG5PlUcUL6DOnEIf6Z6DLxbjxJPZewT',
-                    title: song,
-                    artist: artist,
-                    optimizeQuery: true
-                };
-                getLyrics(options).then((lyrics) => document.getElementById("lyrics").innerHTML = lyrics);
+                var song_name_interval = setInterval(() => {
+                    song_name = document.getElementById("name").innerHTML
+                    artist_name = document.getElementById("artists").innerHTML
+                    if(song_name.length > 1 && artist_name.length > 1) {
+                        var url = '/get-track-details?song='+song_name+"&artist="+artist_name;
+                        console.log(url);
+                        var xmlHttp = new XMLHttpRequest();
+                        xmlHttp.onreadystatechange = function () {
+                            if (xmlHttp.readyState === 4) {
+                                lyrics = xmlHttp.responseText
+                                split_lyrics = lyrics.split("]")
+                                
+                                reformatted_lyrics = []
+                                split_lyrics.forEach(element => {
+                                    if (element.trim() + "]" != "]") {
+                                        reformatted_lyrics.push(element.trim()+"]");
+                                        reformatted_lyrics.push("<br>")
+                                    }                                    
+                                });
+                                
+                                split_lyrics = reformatted_lyrics.join("").split("[")
+                                reformatted_lyrics = []
+                                split_lyrics.forEach(element => {
+                                    if ("["+element.trim() != "[") {
+                                        reformatted_lyrics.push("</br>")
+                                        reformatted_lyrics.push("["+element.trim());
+                                    }
+                                });
+        
+                                document.getElementById("lyrics").innerHTML = reformatted_lyrics.join("");
+                            }
+                        }
+                        xmlHttp.open("GET", url, true); // false for synchronous request
+                        xmlHttp.send(song_name, artist_name);
+                        clearInterval(song_name_interval);
+                    }
+                }, 200);
+
             </script>
         </article>
     </div>

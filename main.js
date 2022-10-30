@@ -7,6 +7,15 @@ app.get("/", function (req, res) {
     res.sendFile(__dirname + "/web/index.html");
 });
 
+const { Lyrics } = require("./commands/lyrics");
+
+app.get("/get-track-details", async function (req, res) {
+    song = req.query.song
+    artist = req.query.artist
+    lyrics = await Lyrics(song, artist)
+    res.send(lyrics)
+});
+
 app.listen(8080, function() {
     console.log("Server is running on localhost8080");
 }); 
