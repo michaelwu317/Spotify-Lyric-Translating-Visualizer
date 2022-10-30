@@ -11,15 +11,12 @@
         font-family: Verdana, sans-serif;
         color: #ffffff;
     }
-
     h1, .play-button {
         text-align: center;
     }
-
     #togglePlay {
-        margin-bottom: 2em;
+        margin-bottom: 1.5em;
     }
-
     .song-name-lyrics {
         display: flex;
         flex-direction: column;
@@ -30,17 +27,14 @@
         margin-left: auto;
         margin-right: auto;
     }
-
     .song-name-lyrics p {
         margin-top: 1em;
         margin-bottom: 1em;
     }
-
     form {
         margin-top: 1em;
         margin-bottom: 1em;
     }
-
     @keyframes move_wave {
         0% {
             transform: translateX(0) translateZ(0) scaleY(1)
@@ -68,7 +62,7 @@
         overflow: hidden;
         height: 100%;
         bottom: -1px;
-        background-image: linear-gradient(to top, #86377b 20%, #5555d7 80%);
+        background-image: linear-gradient(to top, #a0248f 30%, #5555d7 70%);
     }
     .bgTop {
         z-index: -1;
@@ -103,13 +97,13 @@
         background-size: 50% 120px;
     }
     .waveAnimation .waveMiddle {
-        animation: move_wave 10s linear infinite;
+        animation: move_wave 5s linear infinite;
     }
     .waveBottom {
         background-size: 50% 100px;
     }
     .waveAnimation .waveBottom {
-        animation: move_wave 15s linear infinite;
+        animation: move_wave 10s linear infinite;
     }
 </style>
 </head>
@@ -136,7 +130,18 @@
   
     <div class="song-name-lyrics">
         <article>
-            <p>name here</p>
+            <script src="tracks.js"></script>
+            <script>
+                    body = fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer BQDLB27f4cAiUGEYkKhs1n3d39v_CodCanNa8XfCc06UoT5XbgS3fAJTzgS0PoQXz3SLUdobCo5_erX3VxvXqF4bb4DLOssHOPUnhF0YmQpfRSESduBjflGAhsRlw5st9nPY6bHpMw_ocT1JYCy_GUBelWlTzskx-vAQiuxavNp5cB4hhZCX_V61uNSwv-tmju6FH3Ut'
+                }
+                }).then((response) => response.json())
+                .then((data) => document.getElementById("name").innerHTML = data.item.name);
+            </script>
+            <p id="name"></p>
         </article>
 
         <script>
@@ -182,7 +187,8 @@
         </form>
 
         <article>
-            <p>lyrics here</p>
+            <script></script>
+            <p id="lyrics"></p>
         </article>
     </div>
 
