@@ -1,6 +1,6 @@
 const oauth = 'Bearer BQD2mIFVyjJynsJybi26Zzt4pAIkx7CgBIJSAg6OChosDkIbA_okDEeREtr7LV_oRrepMtCyYGlpiJFkBG8BGFB5iCkEZ5DaV-WURESp-eRC0px9t4xPe16Fh_TUckA3Mqqc5_VyM0S0V6XL46CDs-wbGTuTe_yJdLg92qbF8J0qEfxfFAF73930DmrYVBJdkKBAIXOsn0An4ANqf2ck5tE';
-const { getLyrics, getSong } = require("genius-lyrics-api");
-
+import { getLyrics, getSong } from 'genius-lyrics-api';
+ 
 async function getCurrentTrack() {
     await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
     headers: {
@@ -23,7 +23,7 @@ function getTrackCharacteristics(trackID) {
     .then((data) => console.log(data));
 }
 
-async function Lyrics(song, artist){
+function Lyrics(song, artist){
     var options = {
         apiKey: 'YHUqc2XDBg0S5eD9csE8gIVANK0z-Pc4tzG5PlUcUL6DOnEIf6Z6DLxbjxJPZewT',
         title: song,
@@ -31,8 +31,7 @@ async function Lyrics(song, artist){
         optimizeQuery: true
     };
 
-   lyrics = await getLyrics(options);
-   return lyrics;
+    getLyrics(options).then((lyrics) => console.log(lyrics));
 
     // getSong(options).then((song) =>
 	// console.log(`
@@ -41,7 +40,9 @@ async function Lyrics(song, artist){
 	// ${song.url}
 	// ${song.albumArt}
 	// ${song.lyrics}`));
+    return songl;
 }
+
 const lang = {
         en: "English",
         ar: "Arabic",
@@ -74,8 +75,11 @@ const lang = {
         uk: "Ukranian",
       };
     
-    async function translate(lyrics) {
-        fetch('https://libretranslate.com/translate', {
+    //async function translateSong(lyrics,)
+    async function translate(lyrics, lang) {
+        //console.log("params", lang)
+    let x;
+        await fetch('https://libretranslate.com/translate', {
     method: 'POST',
     headers: {
         'authority': 'libretranslate.com',
@@ -93,12 +97,13 @@ const lang = {
         'sec-fetch-site': 'same-origin',
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'
     },
-    body: '------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="q"\r\n\r\n'+lyrics+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="source"\r\n\r\nen\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="target"\r\n\r\nes\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="format"\r\n\r\ntext\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="api_key"\r\n\r\n\r\n------WebKitFormBoundaryShozRedHfOMwzyBE--\r\n'
-}).then((response) => response.json())
-.then((data) => console.log(data));
+    body: '------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="q"\r\n\r\n'+lyrics+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="source"\r\n\r\nes\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="target"\r\n\r\n'+lang+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="format"\r\n\r\ntext\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="api_key"\r\n\r\n\r\n------WebKitFormBoundaryShozRedHfOMwzyBE--\r\n'
+}).then((response) => response.json()).then(function (data) {x = data.translatedText});
+    console.log(x);
+    return x;
     }
 
-    async function translateLyrics(lyrics, lng){
+    /*async function translateLyrics(lyrics, lng){
         const res = await fetch("https://libretranslate.com/translate", {
         method: "POST",
         body: JSON.stringify({
@@ -113,11 +118,11 @@ const lang = {
     
     console.log(await res.json());
     }
-    // Lyrics("Blinding Lights", "The Weeknd");
+
+Lyrics("Blinding Lights", "The Weeknd");
+
 //Lyrics("Mr. Brightside", "The Killers");
 
-//translate("Hi")
 // translateLyrics(Lyrics("Blinding Lights", "The Weeknd"), "es"); 
 
 // console.log(getCurrentTrack());
-module.exports = { Lyrics }
