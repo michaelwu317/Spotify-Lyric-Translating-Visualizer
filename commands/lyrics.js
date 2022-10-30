@@ -1,8 +1,8 @@
-const oauth = "Bearer BQCXZq9KjUm5YD736PvJFq6gy3EFrIQCjnY76PcymWfNhHG1GENlA2UQ0LREBOZRf1IlxjKxuXm0Odpz8RKowCvyBs6j5FQrekQyY0ScxqqjY2cF5Jc";
+const oauth = 'Bearer BQDLB27f4cAiUGEYkKhs1n3d39v_CodCanNa8XfCc06UoT5XbgS3fAJTzgS0PoQXz3SLUdobCo5_erX3VxvXqF4bb4DLOssHOPUnhF0YmQpfRSESduBjflGAhsRlw5st9nPY6bHpMw_ocT1JYCy_GUBelWlTzskx-vAQiuxavNp5cB4hhZCX_V61uNSwv-tmju6FH3Ut';
 import { getLyrics, getSong } from 'genius-lyrics-api';
  
-function getCurrentTrack() {
-    let body = fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+async function getCurrentTrack() {
+    await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -74,6 +74,30 @@ const lang = {
         uk: "Ukranian",
       };
     
+    async function translate(lyrics) {
+        fetch('https://libretranslate.com/translate', {
+    method: 'POST',
+    headers: {
+        'authority': 'libretranslate.com',
+        'accept': '*/*',
+        'accept-language': 'en-US,en;q=0.9',
+        'content-type': 'multipart/form-data; boundary=----WebKitFormBoundaryShozRedHfOMwzyBE',
+        'cookie': '_ga=GA1.1.608833753.1666833854; _ga_KPKM1EP5EW=GS1.1.1667100652.5.1.1667100660.0.0.0',
+        'origin': 'https://libretranslate.com',
+        'referer': 'https://libretranslate.com/?source=en&target=es&q=jerfgjegkjrefff',
+        'sec-ch-ua': '"Chromium";v="106", "Google Chrome";v="106", "Not;A=Brand";v="99"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"macOS"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'
+    },
+    body: '------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="q"\r\n\r\n'+lyrics+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="source"\r\n\r\nen\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="target"\r\n\r\nes\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="format"\r\n\r\ntext\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="api_key"\r\n\r\n\r\n------WebKitFormBoundaryShozRedHfOMwzyBE--\r\n'
+}).then((response) => response.json())
+.then((data) => console.log(data));
+    }
+
     async function translateLyrics(lyrics, lng){
         const res = await fetch("https://libretranslate.com/translate", {
         method: "POST",
@@ -83,6 +107,8 @@ const lang = {
             target: lang.lng
         }),
         headers: { "Content-Type": "application/json" }
+
+    
     });
     
     console.log(await res.json());
@@ -92,6 +118,7 @@ const lang = {
 
 //Lyrics("Mr. Brightside", "The Killers");
 
-//translateLyrics(Lyrics("Blinding Lights", "The Weeknd"), "es"); 
+//translate("Hi")
+// translateLyrics(Lyrics("Blinding Lights", "The Weeknd"), "es"); 
 
 console.log(getCurrentTrack());
