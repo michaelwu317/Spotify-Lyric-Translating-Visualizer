@@ -1,5 +1,4 @@
 const oauth = 'Bearer BQDLB27f4cAiUGEYkKhs1n3d39v_CodCanNa8XfCc06UoT5XbgS3fAJTzgS0PoQXz3SLUdobCo5_erX3VxvXqF4bb4DLOssHOPUnhF0YmQpfRSESduBjflGAhsRlw5st9nPY6bHpMw_ocT1JYCy_GUBelWlTzskx-vAQiuxavNp5cB4hhZCX_V61uNSwv-tmju6FH3Ut';
-//import { vary } from 'express/lib/response';
 import { getLyrics, getSong } from 'genius-lyrics-api';
  
 async function getCurrentTrack() {
@@ -36,10 +35,13 @@ function getTrackCharacteristics(trackID) {
 
     await getLyrics(options).then(function (lyrics) {songl = lyrics});
 
-    /* await getSong(options).then((song) =>
-	songl = song.lyrics 
-); */
-    //console.log(songl);
+    // getSong(options).then((song) =>
+	// console.log(`
+	// ${song.id}
+	// ${song.title}
+	// ${song.url}
+	// ${song.albumArt}
+	// ${song.lyrics}`));
     return songl;
 }
 
@@ -115,23 +117,26 @@ const lang = {
 
     
     });
-    await console.log(x);
+    
+    console.log(await res.json());
     } */
 
 //Lyrics("Blinding Lights", "The Weeknd");
 
 //Lyrics("Mr. Brightside", "The Killers");
-let mrbr = await Lyrics("Mr. Brightside", "The Killers");
+//let mrbr = await Lyrics("Mr. Brightside", "The Killers");
 //translate(mrbr, 'cn');
 //Lyrics("Mr. Brightside", "The Killers");
 async function tr(){
-    //let mrbr = await Lyrics("Mr. Brightside", "The Killers");
+    let mrbr = await Lyrics("Mr. Brightside", "The Killers");
+    //console.log(mrbr);
     //console.log("mrbr", mrbr)
-    let res = await translate( mrbr, 'zh');
+    let res = await translate( mrbr, 'fr');
 }
 
 tr();
 //translate( mrbr, 'fr');
+
 
 // translateLyrics(Lyrics("Blinding Lights", "The Weeknd"), "es"); 
 
