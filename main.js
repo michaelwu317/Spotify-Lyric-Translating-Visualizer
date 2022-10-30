@@ -3,6 +3,8 @@ const express = require("express");
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/", function (req, res) {
     res.sendFile(__dirname + "/web/index.html");
 });
@@ -22,10 +24,14 @@ app.get("/get-track-id"), function (req, res) {
   res.send(characteristics.energy)
 }
 
-app.get('/getLanguage', async function (req, res) {
-  language = req.query.body
-  translated = await translate(lyrics, language)
-  res.send(translated)
+app.post('/get-language', async function (req, res) {
+  translated = await translate(req.body.lyrics, req.body.language)
+
+  response_body = {
+    'translation': translated
+  }
+
+  res.send(JSON.stringify(response_body))
 });
 
 app.listen(8080, function() {
@@ -34,7 +40,7 @@ app.listen(8080, function() {
 
 var http = require('http');
 const { getCurrentTrack, getTrackCharacteristics } = require("./tracks");
-const { translate } = require("libretranslate");
+const { translate } = require("./commands/lyrics");
 
 /** var http = require('http');
 

@@ -1,4 +1,4 @@
-const oauth = 'Bearer BQD2mIFVyjJynsJybi26Zzt4pAIkx7CgBIJSAg6OChosDkIbA_okDEeREtr7LV_oRrepMtCyYGlpiJFkBG8BGFB5iCkEZ5DaV-WURESp-eRC0px9t4xPe16Fh_TUckA3Mqqc5_VyM0S0V6XL46CDs-wbGTuTe_yJdLg92qbF8J0qEfxfFAF73930DmrYVBJdkKBAIXOsn0An4ANqf2ck5tE';
+const oauth = 'Bearer BQD7v2agNGVkk9RHFrKq3UdX0-MPpPuXrLCNmS_H1z3wYk7bSlva8vtalmDMpAdxLI21UbnDlijSjxyBOga3cW1QMIqKRKzIPS5xjPWBAPXh4RJbNZ8mT-tFYUKE5VU1K_WbeNkgLRcXkOSNdj_GU460BW8oCu8g48icsL4T0TArhQMiZEJkuZN2cE0me0iJf0pb2OgB';
 const { getLyrics, getSong } = require("genius-lyrics-api");
  
 async function getCurrentTrack() {
@@ -46,39 +46,39 @@ function getTrackCharacteristics(trackID) {
 }
 
 const lang = {
-        en: "English",
-        ar: "Arabic",
-        az: "Azerbaijani",
-        zh: "Chinese",
-        cs: "Czech",
-        da: "Danish",
-        nl: "Dutch",
-        eo: "Esperanto",
-        fi: "Finnish",
-        fr: "French",
-        de: "German",
-        el: "Greek",
-        he: "Hebrew",
-        hi: "Hindi",
-        hu: "Hungarian",
-        id: "Indonesian",
-        ga: "Irish",
-        it: "Italian",
-        ja: "Japanese",
-        ko: "Korean",
-        fa: "Persian",
-        pl: "Polish",
-        pt: "Portugese",
-        ru: "Russian",
-        sk: "Slovak",
-        es: "Spanish",
-        sv: "Swedish",
-        tr: "Turkish",
-        uk: "Ukranian",
+    "English": "en",
+    "Arabic": "ar",
+    "Azerbaijani" : "az",
+    "Chinese" : "zh",
+    "Czech" : "cs",
+    "Danish" : "da",
+    "Dutch" : "nl",
+    "Esperanto" : "eo",
+    "Finnish" : "fi",
+    "French" : "fr",
+    "German" : "de",
+    "Greek" : "el",
+    "Hebrew" : "he",
+    "Hindi" : "hi",
+    "Hungarian" : "hu",
+    "Indonesian" : "id",
+    "Irish" : "ga",
+    "Italian" : "it",
+    "Japanese" : "ja",
+    "Korean" : "ko",
+    "Persian" : "fa",
+    "Polish" : "pl",
+    "Portugese" : "pt",
+    "Russian" : "ru",
+    "Slovak" : "sk",
+    "Spanish" : "es",
+    "Swedish" : "sv",
+    "Turkish" : "tr",
+    "Ukranian" : "uk",
       };
     
     //async function translateSong(lyrics,)
-    async function translate(lyrics, lang) {
+    async function translate(lyrics, selected_lang) {
         //console.log("params", lang)
     let x;
         await fetch('https://libretranslate.com/translate', {
@@ -99,7 +99,7 @@ const lang = {
         'sec-fetch-site': 'same-origin',
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'
     },
-    body: '------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="q"\r\n\r\n'+lyrics+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="source"\r\n\r\nes\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="target"\r\n\r\n'+lang+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="format"\r\n\r\ntext\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="api_key"\r\n\r\n\r\n------WebKitFormBoundaryShozRedHfOMwzyBE--\r\n'
+    body: '------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="q"\r\n\r\n'+lyrics+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="source"\r\n\r\nes\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="target"\r\n\r\n'+lang[selected_lang]+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="format"\r\n\r\ntext\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="api_key"\r\n\r\n\r\n------WebKitFormBoundaryShozRedHfOMwzyBE--\r\n'
 }).then((response) => response.json()).then(function (data) {x = data.translatedText});
     console.log(x);
     return x;

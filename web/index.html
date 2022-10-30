@@ -140,7 +140,7 @@
                 headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer BQC_gH7bVvnDKdGxbGZMrFmxCZrITrznJ7kbjTYymya3YFLgILsh9Hw1S_Yf3leywJv9EjB-lCL_fjMmLIEo59xwTwnpd3YML2wvCF2dZ-6NljRWgg0-EynTxFoacrayyaEXEuMJhn5QZVaII6_VNkxiZHmxwmSPDfrdziMbvmNKxdmxBChQ4-yEoaZJdMHBQsmujbMo'
+                'Authorization': 'Bearer BQD7v2agNGVkk9RHFrKq3UdX0-MPpPuXrLCNmS_H1z3wYk7bSlva8vtalmDMpAdxLI21UbnDlijSjxyBOga3cW1QMIqKRKzIPS5xjPWBAPXh4RJbNZ8mT-tFYUKE5VU1K_WbeNkgLRcXkOSNdj_GU460BW8oCu8g48icsL4T0TArhQMiZEJkuZN2cE0me0iJf0pb2OgB'
                 }
                 }).then((response) => response.json())
                 .then((data) => changeWaveSpeed(data.energy))               
@@ -171,7 +171,7 @@
                     headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer BQC_gH7bVvnDKdGxbGZMrFmxCZrITrznJ7kbjTYymya3YFLgILsh9Hw1S_Yf3leywJv9EjB-lCL_fjMmLIEo59xwTwnpd3YML2wvCF2dZ-6NljRWgg0-EynTxFoacrayyaEXEuMJhn5QZVaII6_VNkxiZHmxwmSPDfrdziMbvmNKxdmxBChQ4-yEoaZJdMHBQsmujbMo'
+                    'Authorization': 'Bearer BQD7v2agNGVkk9RHFrKq3UdX0-MPpPuXrLCNmS_H1z3wYk7bSlva8vtalmDMpAdxLI21UbnDlijSjxyBOga3cW1QMIqKRKzIPS5xjPWBAPXh4RJbNZ8mT-tFYUKE5VU1K_WbeNkgLRcXkOSNdj_GU460BW8oCu8g48icsL4T0TArhQMiZEJkuZN2cE0me0iJf0pb2OgB'
                 }}).then((response) => handleResponse(response))
                 }  
                 
@@ -196,11 +196,37 @@
 
         <script>
             function listLanguages() {
-            var mylist = document.getElementById("myList");
-            document.getElementById("favorite").value = mylist.options[mylist.selectedIndex].text;
+                var mylist = document.getElementById("myList");
+                document.getElementById("favorite").value = mylist.options[mylist.selectedIndex].text;
             }
+
+            async function translateLyrics() {
+                console.log("Here")
+                
+                selected_language = document.getElementById("myList").value
+    
+                var language = {
+                    'language': selected_language,
+                    'lyrics': document.getElementById("lyrics").innerHTML
+                }
+
+                console.log("getting translation")
+                response = await fetch("http://localhost:8080/get-language", {
+                    method: 'POST',
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(language)
+                }).then((response) => response.json()).then(function (translated) {
+                    document.getElementById("lyrics").innerHTML = translated.translation;
+                    console.log("got lyrics", translated.translation)
+                });
+
+            }
+
         </script>  
-        <form  action="getLanguage">
+        <form onsubmit="translateLyrics();return false">
             <b> Select your language of choice </b>  
             <select id="myList" onchange="listLanguages()"">  
             <option> ---Choose language--- </option>  
@@ -284,7 +310,7 @@
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>
         window.onSpotifyWebPlaybackSDKReady = () => {
-            const token = 'BQDZKAIc5zqer5-SmOTFJSF6fjcKrHq7QD9TIGvZgU6c_dNjyFvmJoEzS33ZoTbfI2DDjBaY6KG_X1XiSnh4K39p_6tDmzhX9PKHjesX5UpXp5n4xRcgsItMtO8h-1IpO3ZHv2dAeuyqWd2q1xDPn8zHd0fnWBxBVUGXR_eEYdvRtPbVKK_HiNM-pQ8u31NPQXMEmNKN3gR6fYUi5MvQj1g';
+            const token = 'BQDrlqCZv2iz_z_qbYgRdjIqLnQTnmXOR5tcOBgshdNH_zWg5wbjqYb0qrRZJjZNbhuf6hl1ai8vcO7AfwEBc7uBZedUH_d-wxM341SaMXS9W91_1dN_Ml7dBY5-ofnVbXqyFfYra72C3SlkcnhhptKb5nnmjesWLkziUWA_6olRCOdpRgiwuL-9Er52N3Ilr1dIDBxKyvV_ox4k9rvROLU';
             const player = new Spotify.Player({
                 name: 'Web Playback SDK Quick Start Player',
                 getOAuthToken: cb => { cb(token); },
