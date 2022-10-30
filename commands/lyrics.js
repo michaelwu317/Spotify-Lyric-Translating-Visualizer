@@ -1,4 +1,5 @@
 const oauth = 'Bearer BQDLB27f4cAiUGEYkKhs1n3d39v_CodCanNa8XfCc06UoT5XbgS3fAJTzgS0PoQXz3SLUdobCo5_erX3VxvXqF4bb4DLOssHOPUnhF0YmQpfRSESduBjflGAhsRlw5st9nPY6bHpMw_ocT1JYCy_GUBelWlTzskx-vAQiuxavNp5cB4hhZCX_V61uNSwv-tmju6FH3Ut';
+//import { vary } from 'express/lib/response';
 import { getLyrics, getSong } from 'genius-lyrics-api';
  
 async function getCurrentTrack() {
@@ -23,7 +24,9 @@ function getTrackCharacteristics(trackID) {
     .then((data) => console.log(data));
 }
 
-function Lyrics(song, artist){
+
+ async function Lyrics(song, artist){
+    var songl;
     var options = {
         apiKey: 'YHUqc2XDBg0S5eD9csE8gIVANK0z-Pc4tzG5PlUcUL6DOnEIf6Z6DLxbjxJPZewT',
         title: song,
@@ -31,17 +34,15 @@ function Lyrics(song, artist){
         optimizeQuery: true
     };
 
-    getLyrics(options).then((lyrics) => console.log(lyrics));
+    await getLyrics(options).then(function (lyrics) {songl = lyrics});
 
-    getSong(options).then((song) =>
-	console.log(`
-	${song.id}
-	${song.title}
-	${song.url}
-	${song.albumArt}
-	${song.lyrics}`)
-);
+    /* await getSong(options).then((song) =>
+	songl = song.lyrics 
+); */
+    //console.log(songl);
+    return songl;
 }
+
 const lang = {
         en: "English",
         ar: "Arabic",
@@ -74,8 +75,11 @@ const lang = {
         uk: "Ukranian",
       };
     
-    async function translate(lyrics) {
-        fetch('https://libretranslate.com/translate', {
+    //async function translateSong(lyrics,)
+    async function translate(lyrics, lang) {
+        //console.log("params", lang)
+    let x;
+        await fetch('https://libretranslate.com/translate', {
     method: 'POST',
     headers: {
         'authority': 'libretranslate.com',
@@ -93,12 +97,13 @@ const lang = {
         'sec-fetch-site': 'same-origin',
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'
     },
-    body: '------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="q"\r\n\r\n'+lyrics+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="source"\r\n\r\nen\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="target"\r\n\r\nes\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="format"\r\n\r\ntext\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="api_key"\r\n\r\n\r\n------WebKitFormBoundaryShozRedHfOMwzyBE--\r\n'
-}).then((response) => response.json())
-.then((data) => console.log(data));
+    body: '------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="q"\r\n\r\n'+lyrics+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="source"\r\n\r\nes\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="target"\r\n\r\n'+lang+'\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="format"\r\n\r\ntext\r\n------WebKitFormBoundaryShozRedHfOMwzyBE\r\nContent-Disposition: form-data; name="api_key"\r\n\r\n\r\n------WebKitFormBoundaryShozRedHfOMwzyBE--\r\n'
+}).then((response) => response.json()).then(function (data) {x = data.translatedText});
+    console.log(x);
+    return x;
     }
 
-    async function translateLyrics(lyrics, lng){
+    /*async function translateLyrics(lyrics, lng){
         const res = await fetch("https://libretranslate.com/translate", {
         method: "POST",
         body: JSON.stringify({
@@ -110,15 +115,24 @@ const lang = {
 
     
     });
-    
-    console.log(await res.json());
-    }
+    await console.log(x);
+    } */
 
 //Lyrics("Blinding Lights", "The Weeknd");
 
 //Lyrics("Mr. Brightside", "The Killers");
+let mrbr = await Lyrics("Mr. Brightside", "The Killers");
+//translate(mrbr, 'cn');
+//Lyrics("Mr. Brightside", "The Killers");
+async function tr(){
+    //let mrbr = await Lyrics("Mr. Brightside", "The Killers");
+    //console.log("mrbr", mrbr)
+    let res = await translate( mrbr, 'zh');
+}
 
-//translate("Hi")
+tr();
+//translate( mrbr, 'fr');
+
 // translateLyrics(Lyrics("Blinding Lights", "The Weeknd"), "es"); 
 
-console.log(getCurrentTrack());
+//console.log(getCurrentTrack());
