@@ -112,13 +112,13 @@
         background-size: 50% 120px;
     }
     .waveAnimation .waveMiddle {
-        animation: move_wave 5s linear infinite;
+        animation: move_wave 1s linear infinite;
     }
     .waveBottom {
         background-size: 50% 100px;
     }
     .waveAnimation .waveBottom {
-        animation: move_wave 10s linear infinite;
+        animation: move_wave 3s linear infinite;
     }
 </style>
 </head>
@@ -134,6 +134,24 @@
         <div class="waveWrapperInner bgBottom">
           <div class="wave waveBottom" style="background-image: url('http://front-end-noobs.com/jecko/img/wave-bot.png')"></div>
         </div>
+        <script>
+            async function fetchSongCharacteristics(){
+                body = fetch(`https://api.spotify.com/v1/audio-features/${trackID}`, {
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer BQC_gH7bVvnDKdGxbGZMrFmxCZrITrznJ7kbjTYymya3YFLgILsh9Hw1S_Yf3leywJv9EjB-lCL_fjMmLIEo59xwTwnpd3YML2wvCF2dZ-6NljRWgg0-EynTxFoacrayyaEXEuMJhn5QZVaII6_VNkxiZHmxwmSPDfrdziMbvmNKxdmxBChQ4-yEoaZJdMHBQsmujbMo'
+                }
+                }).then((response) => response.json())
+                .then((data) => changeWaveSpeed(data.energy))               
+            }
+
+            async function changeWaveSpeed(resp) {
+                document.getElementById("waveBottom") = energy;
+                document.getElementById("waveMiddle") = energy*1.5;
+            }
+            fetchSongCharacteristics();
+        </script>
     </div>
 
     <h1>Spotify Visualizer</h1>
@@ -147,14 +165,13 @@
         <article>
             <p id="name"></p>
             <p id="artists"></p>
-            <script src="tracks.js"></script>
             <script>
                 async function fetchCurrentSong(){
                     body = fetch('https://api.spotify.com/v1/me/player/currently-playing', {
                     headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer BQC_MTbxSYZJ8xr2VnKueGVDd4OY1biw52vC3YBeq371Epl9jOHT5AdBkN0ZlIf8pTD6r7I0IQUxsXscOfH0CVy22_Tt1eNKsc5bQRwd4obdq8XWrSHu72EwragmpDPO56rfZy3776fzpwhrwTbYl7G5zNMBW3cX4Nf4qVjbcmplaG7A_93dpChlF0tH4XY2pNs'
+                    'Authorization': 'Bearer BQC_gH7bVvnDKdGxbGZMrFmxCZrITrznJ7kbjTYymya3YFLgILsh9Hw1S_Yf3leywJv9EjB-lCL_fjMmLIEo59xwTwnpd3YML2wvCF2dZ-6NljRWgg0-EynTxFoacrayyaEXEuMJhn5QZVaII6_VNkxiZHmxwmSPDfrdziMbvmNKxdmxBChQ4-yEoaZJdMHBQsmujbMo'
                 }}).then((response) => handleResponse(response))
                 }  
                 
@@ -183,9 +200,9 @@
             document.getElementById("favorite").value = mylist.options[mylist.selectedIndex].text;
             }
         </script>  
-        <form>
+        <form  action="getLanguage">
             <b> Select your language of choice </b>  
-            <select id="myList" onchange="listLanguages()">  
+            <select id="myList" onchange="listLanguages()"">  
             <option> ---Choose language--- </option>  
             <option> English </option>  
             <option> Arabic </option>  
@@ -217,18 +234,17 @@
             <option> Turkish </option>
             <option> Ukranian </option>
             </select>
+            <input type="submit" />
         </form>
 
         <article>
             <p id="lyrics"></p>
-            <script src="../commands/lyrics.js"></script>
             <script>
                 var song_name_interval = setInterval(() => {
                     song_name = document.getElementById("name").innerHTML
                     artist_name = document.getElementById("artists").innerHTML
                     if(song_name.length > 1 && artist_name.length > 1) {
                         var url = '/get-track-details?song='+song_name+"&artist="+artist_name;
-                        console.log(url);
                         var xmlHttp = new XMLHttpRequest();
                         xmlHttp.onreadystatechange = function () {
                             if (xmlHttp.readyState === 4) {

@@ -128,3 +128,5 @@ Lyrics("Blinding Lights", "The Weeknd");
 // translateLyrics(Lyrics("Blinding Lights", "The Weeknd"), "es"); 
 
 console.log(getCurrentTrack()); */
+
+module.exports = { Lyrics, translate }
