@@ -1,4 +1,4 @@
-const oauth = 'Bearer BQDLB27f4cAiUGEYkKhs1n3d39v_CodCanNa8XfCc06UoT5XbgS3fAJTzgS0PoQXz3SLUdobCo5_erX3VxvXqF4bb4DLOssHOPUnhF0YmQpfRSESduBjflGAhsRlw5st9nPY6bHpMw_ocT1JYCy_GUBelWlTzskx-vAQiuxavNp5cB4hhZCX_V61uNSwv-tmju6FH3Ut';
+const oauth = 'Bearer BQD2mIFVyjJynsJybi26Zzt4pAIkx7CgBIJSAg6OChosDkIbA_okDEeREtr7LV_oRrepMtCyYGlpiJFkBG8BGFB5iCkEZ5DaV-WURESp-eRC0px9t4xPe16Fh_TUckA3Mqqc5_VyM0S0V6XL46CDs-wbGTuTe_yJdLg92qbF8J0qEfxfFAF73930DmrYVBJdkKBAIXOsn0An4ANqf2ck5tE';
 import { getLyrics, getSong } from 'genius-lyrics-api';
  
 async function getCurrentTrack() {
@@ -33,14 +33,13 @@ function Lyrics(song, artist){
 
     getLyrics(options).then((lyrics) => console.log(lyrics));
 
-    getSong(options).then((song) =>
-	console.log(`
-	${song.id}
-	${song.title}
-	${song.url}
-	${song.albumArt}
-	${song.lyrics}`)
-);
+    // getSong(options).then((song) =>
+	// console.log(`
+	// ${song.id}
+	// ${song.title}
+	// ${song.url}
+	// ${song.albumArt}
+	// ${song.lyrics}`));
 }
 const lang = {
         en: "English",
@@ -114,11 +113,11 @@ const lang = {
     console.log(await res.json());
     }
 
-//Lyrics("Blinding Lights", "The Weeknd");
+Lyrics("Blinding Lights", "The Weeknd");
 
 //Lyrics("Mr. Brightside", "The Killers");
 
 //translate("Hi")
 // translateLyrics(Lyrics("Blinding Lights", "The Weeknd"), "es"); 
 
-console.log(getCurrentTrack());
+// console.log(getCurrentTrack());
